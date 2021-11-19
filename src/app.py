@@ -170,3 +170,9 @@ def api_container_top(container_id):
     api_container_top.get_params = {"ps_args": {"default": None ,"type": str}}
     parameters = get_HTTP_params(api_container_top.get_params, request)
     return jsonify(container.top(**parameters))
+
+
+@app.route("/docker/api/container/<container_id>/stats", methods=['GET'])
+def api_container_stats(container_id):
+    container = get_docker_container_from_id(container_id)
+    return jsonify(container.stats(decode=False, stream=False))
