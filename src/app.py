@@ -4,12 +4,33 @@ import docker
 client = docker.from_env()
 app = Flask(__name__)
 
-def get_params_from_HTTP_get(get_param_dict, request):
+def get_HTTP_params(get_param_dict, request):
+    if request.method == 'GET':
+        return get_params_from_HTTP_GET(get_param_dict, request)
+    elif request.method in ['POST', 'PUT']:
+        if request.is_json:
+            return get_params_from_json(request)
+        else:
+            return get_params_from_HTTP_POST(get_param_dict, request)
+
+def get_params_from_HTTP_GET(get_param_dict, request):
     parameters = {}
     for param_name, datatype_info in get_param_dict.items():
         parameter = request.args.get(key=param_name, default=datatype_info["default"], type=json.loads)
         parameters[param_name] = parameter
     return parameters
+
+
+def get_params_from_HTTP_POST(get_param_dict, request):
+    parameters = {}
+    for param_name, datatype_info in get_param_dict.items():
+        parameter = request.form.get(key=param_name, default=datatype_info["default"], type=json.loads)
+        parameters[param_name] = parameter
+    return parameters
+
+def get_params_from_json(request):
+    return request.get_json()
+
 
 
 @app.route("/")
@@ -26,7 +47,7 @@ def api_containers_list():
                                       "sparse": {"default": False ,"type": bool},
                                       "ignore_removed": {"default": False ,"type": bool}
                                       }
-    parameters = get_params_from_HTTP_get(api_containers_list.get_params, request)
+    parameters = get_HTTP_params(api_containers_list.get_params, request)
     try:
         containers = client.containers.list(**parameters)
     except:
@@ -38,7 +59,7 @@ def api_containers_list():
 def api_containers_get():
     api_containers_get.get_params = {"container_id": {"default": None ,"type": str}}
     
-    parameters = get_params_from_HTTP_get(api_containers_get.get_params, request)
+    parameters = get_HTTP_params(api_containers_get.get_params, request)
     print(parameters)
 
     try:
@@ -105,6 +126,20 @@ def api_container_short_unpause(container_id):
     container = get_docker_container_from_id(container_id)
     try:
         container.unpause()
+    except:
+        abort(400)
+    return ('', 204)
+
+
+@app.route("/docker/api/container/<container_id>/rename", methods=['PUT'])
+def api_container_short_rename(container_id):
+    container = get_docker_container_from_id(container_id)
+    api_container_short_rename.get_params = {"name": {"default": None ,"type": str}}
+
+    parameters = request.get_json()
+
+    try:
+        container.rename(**parameters)
     except:
         abort(400)
     return ('', 204)
