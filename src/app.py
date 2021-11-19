@@ -220,3 +220,13 @@ def api_container_kill(container_id):
 def api_container_logs(container_id):
     container = get_docker_container_from_id(container_id)
     return Response(container.logs().decode("utf-8"), mimetype="text/plain")
+
+
+@app.route("/docker/api/container/<container_id>/export", methods=['GET'])
+def api_container_export(container_id):
+    container = get_docker_container_from_id(container_id)
+    print("test")
+    return Response(container.export(), 
+                    mimetype='application/octet-stream', 
+                    headers=[('Content-Length', str()),
+                            ('Content-Disposition', "attachment; filename=export.tar") ],)
