@@ -178,6 +178,16 @@ def api_container_stats(container_id):
     return jsonify(container.stats(decode=False, stream=False))
 
 
+@app.route("/docker/api/container/<container_id>/reload", methods=['PUT'])
+def api_container_reload(container_id):
+    container = get_docker_container_from_id(container_id)
+    try:
+        container.reload()
+    except:
+        abort(400)
+    return ('', 204)
+
+
 @app.route("/docker/api/container/<container_id>/remove", methods=['DELETE'])
 def api_container_remove(container_id):
     container = get_docker_container_from_id(container_id)
