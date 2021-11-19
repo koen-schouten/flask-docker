@@ -176,3 +176,18 @@ def api_container_top(container_id):
 def api_container_stats(container_id):
     container = get_docker_container_from_id(container_id)
     return jsonify(container.stats(decode=False, stream=False))
+
+
+@app.route("/docker/api/container/<container_id>/remove", methods=['DELETE'])
+def api_container_remove(container_id):
+    container = get_docker_container_from_id(container_id)
+    api_container_remove.get_params = {"v": {"default": False ,"type": bool},
+                                      "link ": {"default": False ,"type": str},
+                                      "force ": {"default": False ,"type": str}  
+                                      } 
+    parameters = get_HTTP_params(api_container_stop.get_params, request)
+    try:
+        container.remove(**parameters)
+    except:
+        abort(400)
+    return ('', 204)
