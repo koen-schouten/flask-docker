@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, abort, json
+from flask import Flask, jsonify, request, abort, json, Response
 import docker
 
 client = docker.from_env()
@@ -201,3 +201,9 @@ def api_container_remove(container_id):
     except:
         abort(400)
     return ('', 204)
+
+
+@app.route("/docker/api/container/<container_id>/logs", methods=['GET'])
+def api_container_logs(container_id):
+    container = get_docker_container_from_id(container_id)
+    return Response(container.logs().decode("utf-8"), mimetype="text/plain")
