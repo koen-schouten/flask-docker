@@ -46,3 +46,45 @@ def api_containers_get():
     except:
         abort(400)
     return jsonify(container.attrs)
+
+def get_docker_container_from_id(container_id):
+    try:
+        container = client.containers.get(container_id)
+    except:
+        abort(404)
+    return container
+
+@app.route("/docker/api/container/<container_id>/id", methods=['GET'])
+def api_container_id(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.id)
+
+@app.route("/docker/api/container/<container_id>/image", methods=['GET'])
+def api_container_image(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.image.attrs)
+
+@app.route("/docker/api/container/<container_id>/labels", methods=['GET'])
+def api_container_labels(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.labels)
+
+@app.route("/docker/api/container/<container_id>/name", methods=['GET'])
+def api_container_name(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.name)
+
+@app.route("/docker/api/container/<container_id>/short_id", methods=['GET'])
+def api_container_short_id(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.short_id)
+
+@app.route("/docker/api/container/<container_id>/status", methods=['GET'])
+def api_container_short_status(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.status)
+
+@app.route("/docker/api/container/<container_id>/diff", methods=['GET'])
+def api_container_short_diff(container_id):
+    container = get_docker_container_from_id(container_id) 
+    return jsonify(container.diff())
