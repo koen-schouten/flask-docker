@@ -88,3 +88,23 @@ def api_container_short_status(container_id):
 def api_container_short_diff(container_id):
     container = get_docker_container_from_id(container_id) 
     return jsonify(container.diff())
+
+
+@app.route("/docker/api/container/<container_id>/pause", methods=['PUT'])
+def api_container_short_pause(container_id):
+    container = get_docker_container_from_id(container_id) 
+    try:
+        container.pause()
+    except:
+        abort(400)
+    return ('', 204)
+
+
+@app.route("/docker/api/container/<container_id>/unpause", methods=['PUT'])
+def api_container_short_unpause(container_id):
+    container = get_docker_container_from_id(container_id)
+    try:
+        container.unpause()
+    except:
+        abort(400)
+    return ('', 204)
