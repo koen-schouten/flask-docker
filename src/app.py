@@ -203,6 +203,19 @@ def api_container_remove(container_id):
     return ('', 204)
 
 
+@app.route("/docker/api/container/<container_id>/kill", methods=['PUT'])
+def api_container_kill(container_id):
+    container = get_docker_container_from_id(container_id)
+    api_container_kill.get_params = {"signal": {"default": None ,"type": int}} 
+    parameters = get_HTTP_params(api_container_kill.get_params, request)
+    print(parameters)
+    try:
+        container.kill(**parameters)
+    except:
+        abort(400)
+    return ('', 204)
+
+
 @app.route("/docker/api/container/<container_id>/logs", methods=['GET'])
 def api_container_logs(container_id):
     container = get_docker_container_from_id(container_id)
