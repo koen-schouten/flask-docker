@@ -101,18 +101,18 @@ def api_container_short_id(container_id):
     return jsonify(container.short_id)
 
 @app.route("/docker/api/container/<container_id>/status", methods=['GET'])
-def api_container_short_status(container_id):
+def api_container_status(container_id):
     container = get_docker_container_from_id(container_id) 
     return jsonify(container.status)
 
 @app.route("/docker/api/container/<container_id>/diff", methods=['GET'])
-def api_container_short_diff(container_id):
+def api_container_diff(container_id):
     container = get_docker_container_from_id(container_id) 
     return jsonify(container.diff())
 
 
 @app.route("/docker/api/container/<container_id>/pause", methods=['PUT'])
-def api_container_short_pause(container_id):
+def api_container_pause(container_id):
     container = get_docker_container_from_id(container_id) 
     try:
         container.pause()
@@ -122,7 +122,7 @@ def api_container_short_pause(container_id):
 
 
 @app.route("/docker/api/container/<container_id>/unpause", methods=['PUT'])
-def api_container_short_unpause(container_id):
+def api_container_unpause(container_id):
     container = get_docker_container_from_id(container_id)
     try:
         container.unpause()
@@ -132,9 +132,9 @@ def api_container_short_unpause(container_id):
 
 
 @app.route("/docker/api/container/<container_id>/rename", methods=['PUT'])
-def api_container_short_rename(container_id):
+def api_container_rename(container_id):
     container = get_docker_container_from_id(container_id)
-    api_container_short_rename.get_params = {"name": {"default": None ,"type": str}}
+    api_container_rename.get_params = {"name": {"default": None ,"type": str}}
 
     parameters = request.get_json()
 
@@ -146,7 +146,7 @@ def api_container_short_rename(container_id):
 
 
 @app.route("/docker/api/container/<container_id>/start", methods=['PUT'])
-def api_container_short_start(container_id):
+def api_container_start(container_id):
     container = get_docker_container_from_id(container_id)
     try:
         container.start()
@@ -156,7 +156,7 @@ def api_container_short_start(container_id):
 
 
 @app.route("/docker/api/container/<container_id>/stop", methods=['PUT'])
-def api_container_short_stop(container_id):
+def api_container_stop(container_id):
     container = get_docker_container_from_id(container_id)
     try:
         container.stop()
@@ -165,7 +165,7 @@ def api_container_short_stop(container_id):
     return ('', 204)
 
 @app.route("/docker/api/container/<container_id>/top", methods=['GET'])
-def api_container_short_top(container_id):
+def api_container_top(container_id):
     container = get_docker_container_from_id(container_id)
     api_containers_get.get_params = {"ps_args": {"default": None ,"type": str}}
     parameters = get_HTTP_params(api_containers_get.get_params, request)
