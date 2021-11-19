@@ -167,6 +167,6 @@ def api_container_stop(container_id):
 @app.route("/docker/api/container/<container_id>/top", methods=['GET'])
 def api_container_top(container_id):
     container = get_docker_container_from_id(container_id)
-    api_containers_get.get_params = {"ps_args": {"default": None ,"type": str}}
-    parameters = get_HTTP_params(api_containers_get.get_params, request)
+    api_container_top.get_params = {"ps_args": {"default": None ,"type": str}}
+    parameters = get_HTTP_params(api_container_top.get_params, request)
     return jsonify(container.top(**parameters))
