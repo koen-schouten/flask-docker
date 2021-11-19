@@ -4,16 +4,12 @@ import docker
 client = docker.from_env()
 app = Flask(__name__)
 
-def recursively_build_json(val):
-    if isinstance(val, list):
-        new_val = [recursively_build_json(item) for item in val]
-    elif type(val) is dict:
-        new_val = {key:recursively_build_json(value) for (key,value) in val.items()}
-    elif hasattr(val, '_asdict'):
-        new_val = {key:recursively_build_json(value) for (key,value) in val._asdict().items()}
-    else:
-        new_val = val
-    return new_val
+def get_params_from_HTTP_get(get_param_dict, request):
+    parameters = {}
+    for param_name, datatype_info in get_param_dict.items():
+        parameter = request.args.get(key=param_name, default=datatype_info["default"], type=json.loads)
+        parameters[param_name] = parameter
+    return parameters
 
 
 @app.route("/")
@@ -30,14 +26,23 @@ def api_containers_list():
                                       "sparse": {"default": False ,"type": bool},
                                       "ignore_removed": {"default": False ,"type": bool}
                                       }
-    
-    parameters = {}
-    for param_name, datatype_info in api_containers_list.get_params.items():
-        parameter = request.args.get(key=param_name, default=datatype_info["default"], type=json.loads)
-        parameters[param_name] = parameter
-
+    parameters = get_params_from_HTTP_get(api_containers_list.get_params, request)
     try:
         containers = client.containers.list(**parameters)
     except:
         abort(400)
     return jsonify([container.attrs for container in containers])
+
+
+@app.route("/docker/api/containers/get", methods=['GET'])
+def api_containers_get():
+    api_containers_get.get_params = {"container_id": {"default": None ,"type": str}}
+    
+    parameters = get_params_from_HTTP_get(api_containers_get.get_params, request)
+    print(parameters)
+
+    try:
+        container = client.containers.get(**parameters)
+    except:
+        abort(400)
+    return jsonify(container.attrs)
