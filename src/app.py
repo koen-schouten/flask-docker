@@ -143,3 +143,23 @@ def api_container_short_rename(container_id):
     except:
         abort(400)
     return ('', 204)
+
+
+@app.route("/docker/api/container/<container_id>/start", methods=['PUT'])
+def api_container_short_start(container_id):
+    container = get_docker_container_from_id(container_id)
+    try:
+        container.start()
+    except:
+        abort(400)
+    return ('', 204)
+
+
+@app.route("/docker/api/container/<container_id>/stop", methods=['PUT'])
+def api_container_short_stop(container_id):
+    container = get_docker_container_from_id(container_id)
+    try:
+        container.stop()
+    except:
+        abort(400)
+    return ('', 204)
