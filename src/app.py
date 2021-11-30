@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, abort, json, Response
+from flask import Flask, jsonify, request, abort, Response
 from utils import *
 import docker
 
@@ -8,6 +8,108 @@ app = Flask(__name__)
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
+
+@app.route("/docker/api/containers/run", methods=['GET'])
+def api_containers_run():
+    api_containers_run.get_params = {
+        "image": {"default": None ,"type": str},
+        "command": {"default": None ,"type": str},
+        "auto_remove": {"default": None ,"type": bool},
+        "blkio_weight_device": {"default": None ,"type": dict},
+        "blkio_weight": {"default": None ,"type": int},
+        "cap_add": {"default": None ,"type": str},
+        "cap_drop": {"default": None ,"type": str},
+        "cgroup_parent": {"default": None ,"type": str},
+        "cpu_count": {"default": None ,"type": int},
+        "cpu_percent": {"default": None ,"type": int},
+        "cpu_period": {"default": None ,"type": int},
+        "cpu_quota": {"default": None ,"type": int},
+        "cpu_rt_period": {"default": None ,"type": int},
+        "cpu_rt_runtime": {"default": None ,"type": int},
+        "cpu_shares": {"default": None ,"type": int},
+        "cpuset_cpus": {"default": None ,"type": int},
+        "cpuset_mems": {"default": None ,"type": str},
+        "detach": {"default": False ,"type": bool},
+        "device_cgroup_rules": {"default": None ,"type": list},
+        "device_read_bps": {"default": None ,"type": dict},
+        "device_read_iops": {"default": None ,"type": int},
+        "device_write_bps": {"default": None ,"type": int},
+        "device_write_iops": {"default": None ,"type": int},
+        "devices": {"default": None ,"type": list},
+        "dns": {"default": None ,"type": list},
+        "dns_opt": {"default": None ,"type": list},
+        "dns_search": {"default": None ,"type": list},
+        "domainname": {"default": None ,"type": str},
+        "entrypoint": {"default": None ,"type": str},
+        "environment": {"default": None ,"type": dict},
+        "extra_hosts": {"default": None ,"type": dict},
+        "healthcheck": {"default": None ,"type": dict},
+        "hostname": {"default": None ,"type": str},
+        "init": {"default": None ,"type": bool},
+        "init_path": {"default": None ,"type": str},
+        "ipc_mode": {"default": None ,"type": str},
+        "isolation": {"default": None ,"type": str},
+        "kernel_memory": {"default": None ,"type": int},
+        "labels": {"default": None ,"type": dict},
+        "links": {"default": None ,"type": dict},
+        #"log_config": {"default": None ,"type": logConfic},
+        "lxc_conf": {"default": None ,"type": dict},
+        "mac_address": {"default": None ,"type": str},
+        "mem_limit": {"default": None ,"type": int},
+        "mem_reservation": {"default": None ,"type": int},
+        "mem_swappiness": {"default": None ,"type": int},
+        "memswap_limit": {"default": None ,"type": str},
+        "mounts": {"default": None ,"type": list},
+        "name": {"default": None ,"type": str},
+        "nano_cpus": {"default": None ,"type": int},
+        "network": {"default": None ,"type": str},
+        "network_disabled": {"default": None ,"type": bool},
+        "network_mode": {"default": None ,"type": str},
+        "oom_kill_disable": {"default": None ,"type": bool},
+        "oom_score_adj ": {"default": None ,"type": int},
+        "pid_mode": {"default": None ,"type": str},
+        "pids_limit": {"default": None ,"type": int},       
+        "platform": {"default": None ,"type": str}, 
+        "pids_limit": {"default": None ,"type": int},         
+        "ports": {"default": None ,"type": dict}, 
+        "privileged": {"default": None ,"type": bool},
+        "publish_all_ports ": {"default": None ,"type": bool},
+        "read_only": {"default": None ,"type": bool},
+        "remove": {"default": None ,"type": bool},       
+        "restart_policy": {"default": None ,"type": dict}, 
+        "runtime": {"default": None ,"type": str},         
+        "security_opt": {"default": None ,"type": list}, 
+        "shm_size": {"default": None ,"type": str},
+        "stdin_open": {"default": None ,"type": bool},      
+        "stdout": {"default": None ,"type": bool},      
+        "stderr": {"default": None ,"type": bool},      
+        "stop_signal": {"default": None ,"type": str},      
+        "storage_opt": {"default": None ,"type": dict},      
+        "sysctls": {"default": None ,"type": dict},      
+        "tmpfs": {"default": None ,"type": dict},                                                    
+        "tty": {"default": None ,"type": bool},      
+        "ulimits": {"default": None ,"type": list},      
+        "use_config_proxy": {"default": None ,"type": bool},      
+        "user": {"default": None ,"type": str},      
+        "userns_mode": {"default": None ,"type": str},                                      
+        "uts_mode": {"default": None ,"type": str},      
+        "version": {"default": None ,"type": str},
+        "volume_driver": {"default": None ,"type": str},
+        "volumes": {"default": None ,"type": dict},
+        "volumes_from": {"default": None ,"type": list},
+        "working_dir": {"default": None ,"type": str},                
+    }
+    
+    parameters = get_HTTP_params(api_containers_run.get_params, request)
+    print(parameters)
+    try:
+        container = client.containers.run(**parameters)
+        container.logs()
+    except:
+        abort(400)
+    return ('', 204)
+
+
 
 @app.route("/docker/api/containers/list", methods=['GET'])
 def api_containers_list():
