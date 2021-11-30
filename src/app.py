@@ -368,3 +368,14 @@ def api_image_short_tags(image_id):
 def api_image_short_history(image_id):
     image = get_docker_image_from_name(image_id) 
     return jsonify(image.history())
+
+
+@app.route("/docker/api/image/<image_id>/reload", methods=['PUT'])
+def api_image_short_reload(image_id):
+    image = get_docker_image_from_name(image_id) 
+    try:
+        image.reload()
+        return ('', 204)
+    except:
+        abort(400)
+
