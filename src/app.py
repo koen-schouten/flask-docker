@@ -359,19 +359,19 @@ def api_image_short_id(image_id):
 
 
 @app.route("/docker/api/image/<image_id>/tags", methods=['GET'])
-def api_image_short_tags(image_id):
+def api_image_tags(image_id):
     image = get_docker_image_from_name(image_id) 
     return jsonify(image.tags)
 
 
 @app.route("/docker/api/image/<image_id>/history", methods=['GET'])
-def api_image_short_history(image_id):
+def api_image_history(image_id):
     image = get_docker_image_from_name(image_id) 
     return jsonify(image.history())
 
 
 @app.route("/docker/api/image/<image_id>/reload", methods=['PUT'])
-def api_image_short_reload(image_id):
+def api_image_reload(image_id):
     image = get_docker_image_from_name(image_id) 
     try:
         image.reload()
@@ -387,4 +387,19 @@ def api_container_image_save(image_id):
                     mimetype='application/octet-stream', 
                     headers=[('Content-Length', str()),
                             ('Content-Disposition', f"attachment; filename={image.id}.tar") ],)
+    
 
+@app.route("/docker/api/image/<image_id>/tag", methods=['PUT'])
+def api_image_tag(image_id):
+    image = get_docker_image_from_name(image_id) 
+    api_image_tag.get_params = {
+        "repository": {"default": None ,"type": str},
+        "tag": {"default": None ,"type": str},
+        } 
+    parameters = get_HTTP_params(api_image_tag.get_params, request)
+    print(parameters)
+    try:
+        image.tag(**parameters)
+        return ('', 204)
+    except:
+        abort(400)
