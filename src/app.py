@@ -378,4 +378,13 @@ def api_image_short_reload(image_id):
         return ('', 204)
     except:
         abort(400)
+        
+
+@app.route("/docker/api/image/<image_id>/save", methods=['GET'])
+def api_container_image_save(image_id):
+    image = get_docker_image_from_name(image_id)
+    return Response(image.save(), 
+                    mimetype='application/octet-stream', 
+                    headers=[('Content-Length', str()),
+                            ('Content-Disposition', "attachment; filename=image.tar") ],)
 
