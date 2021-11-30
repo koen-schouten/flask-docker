@@ -323,7 +323,18 @@ def api_images_list():
     image_list = client.images.list()
     return jsonify([image.attrs for image in image_list])
 
+@app.route("/docker/api/images/load", methods=['POST'])
+def api_images_load():
+    if len(request.files) == 1:
+        #files.items[0] is a tuple (filename, file) so therefore [1] at the end
+        file = next(iter(request.files.items()))[1]
+        #client.images.load(file) returns an image list. 
+        #There is only one image so therefore the [0] at the end.
+        image = client.images.load(file)[0]
+        return jsonify(image.attrs)
+    abort(400)
 
+    
 def get_docker_image_from_name(name):
     try:
         image = client.images.get(name)
