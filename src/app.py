@@ -322,3 +322,25 @@ def api_container_export(container_id):
 def api_images_list():
     image_list = client.images.list()
     return jsonify([image.attrs for image in image_list])
+
+
+def get_docker_image_from_name(name):
+    try:
+        image = client.images.get(name)
+    except:
+        abort(404)
+    return image
+
+#-----------------------------------------------------------------------------#   
+#Image
+#-----------------------------------------------------------------------------#   
+@app.route("/docker/api/image/<image_id>/attrs", methods=['GET'])
+def api_image_attrs(image_id):
+    image = get_docker_image_from_name(image_id) 
+    return jsonify(image.attrs)
+
+
+@app.route("/docker/api/image/<image_id>/id", methods=['GET'])
+def api_image_id(image_id):
+    image = get_docker_image_from_name(image_id) 
+    return jsonify(image.id)
