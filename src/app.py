@@ -66,14 +66,14 @@ def api_containers_run():
         "network_disabled": {"default": None ,"type": bool},
         "network_mode": {"default": None ,"type": str},
         "oom_kill_disable": {"default": None ,"type": bool},
-        "oom_score_adj ": {"default": None ,"type": int},
+        "oom_score_adj": {"default": None ,"type": int},
         "pid_mode": {"default": None ,"type": str},
         "pids_limit": {"default": None ,"type": int},       
         "platform": {"default": None ,"type": str}, 
         "pids_limit": {"default": None ,"type": int},         
         "ports": {"default": None ,"type": dict}, 
         "privileged": {"default": None ,"type": bool},
-        "publish_all_ports ": {"default": None ,"type": bool},
+        "publish_all_ports": {"default": None ,"type": bool},
         "read_only": {"default": None ,"type": bool},
         "remove": {"default": None ,"type": bool},       
         "restart_policy": {"default": None ,"type": dict}, 
@@ -266,8 +266,8 @@ def api_container_reload(container_id):
 def api_container_remove(container_id):
     container = get_docker_container_from_id(container_id)
     api_container_remove.get_params = {"v": {"default": False ,"type": bool},
-                                      "link ": {"default": False ,"type": str},
-                                      "force ": {"default": False ,"type": str}  
+                                      "link": {"default": False ,"type": str},
+                                      "force": {"default": False ,"type": str}  
                                       } 
     parameters = get_HTTP_params(api_container_stop.get_params, request)
     try:
