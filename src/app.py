@@ -8,7 +8,9 @@ app = Flask(__name__)
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
-
+#-----------------------------------------------------------------------------#   
+#Containers
+#-----------------------------------------------------------------------------# 
 @app.route("/docker/api/containers/run", methods=['GET'])
 def api_containers_run():
     api_containers_run.get_params = {
@@ -154,6 +156,9 @@ def get_docker_container_from_id(container_id):
         abort(404)
     return container
 
+#-----------------------------------------------------------------------------#   
+#Container
+#-----------------------------------------------------------------------------#  
 @app.route("/docker/api/container/<container_id>/id", methods=['GET'])
 def api_container_id(container_id):
     container = get_docker_container_from_id(container_id) 
@@ -304,8 +309,16 @@ def api_container_logs(container_id):
 @app.route("/docker/api/container/<container_id>/export", methods=['GET'])
 def api_container_export(container_id):
     container = get_docker_container_from_id(container_id)
-    print("test")
     return Response(container.export(), 
                     mimetype='application/octet-stream', 
                     headers=[('Content-Length', str()),
                             ('Content-Disposition', "attachment; filename=export.tar") ],)
+
+#-----------------------------------------------------------------------------#   
+#Images
+#-----------------------------------------------------------------------------#   
+
+@app.route("/docker/api/images/list", methods=['GET'])
+def api_images_list():
+    image_list = client.images.list()
+    return jsonify([image.attrs for image in image_list])
