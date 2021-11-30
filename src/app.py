@@ -312,7 +312,7 @@ def api_container_export(container_id):
     return Response(container.export(), 
                     mimetype='application/octet-stream', 
                     headers=[('Content-Length', str()),
-                            ('Content-Disposition', "attachment; filename=export.tar") ],)
+                            ('Content-Disposition', f"attachment; filename={container.id}.tar") ],)
 
 #-----------------------------------------------------------------------------#   
 #Images
@@ -386,5 +386,5 @@ def api_container_image_save(image_id):
     return Response(image.save(), 
                     mimetype='application/octet-stream', 
                     headers=[('Content-Length', str()),
-                            ('Content-Disposition', "attachment; filename=image.tar") ],)
+                            ('Content-Disposition', f"attachment; filename={image.id}.tar") ],)
 
