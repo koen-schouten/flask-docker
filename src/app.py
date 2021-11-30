@@ -344,3 +344,9 @@ def api_image_attrs(image_id):
 def api_image_id(image_id):
     image = get_docker_image_from_name(image_id) 
     return jsonify(image.id)
+
+
+@app.route("/docker/api/image/<image_id>/labels", methods=['GET'])
+def api_image_labels(image_id):
+    image = get_docker_image_from_name(image_id) 
+    return jsonify(image.labels)
