@@ -1,3 +1,5 @@
+from flask import json
+
 def get_HTTP_params(get_param_dict, request):
     if request.method == 'GET':
         return get_params_from_HTTP_GET(get_param_dict, request)
