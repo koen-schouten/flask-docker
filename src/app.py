@@ -363,3 +363,8 @@ def api_image_short_tags(image_id):
     image = get_docker_image_from_name(image_id) 
     return jsonify(image.tags)
 
+
+@app.route("/docker/api/image/<image_id>/history", methods=['GET'])
+def api_image_short_history(image_id):
+    image = get_docker_image_from_name(image_id) 
+    return jsonify(image.history())
