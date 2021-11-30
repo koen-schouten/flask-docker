@@ -29,7 +29,7 @@ def api_containers_run():
         "cpu_shares": {"default": None ,"type": int},
         "cpuset_cpus": {"default": None ,"type": int},
         "cpuset_mems": {"default": None ,"type": str},
-        "detach": {"default": False ,"type": bool},
+        "detach": {"default": True ,"type": bool},
         "device_cgroup_rules": {"default": None ,"type": list},
         "device_read_bps": {"default": None ,"type": dict},
         "device_read_iops": {"default": None ,"type": int},
@@ -75,16 +75,17 @@ def api_containers_run():
         "privileged": {"default": None ,"type": bool},
         "publish_all_ports": {"default": None ,"type": bool},
         "read_only": {"default": None ,"type": bool},
-        "remove": {"default": None ,"type": bool},       
+        "remove": {"default": False ,"type": bool},       
         "restart_policy": {"default": None ,"type": dict}, 
         "runtime": {"default": None ,"type": str},         
         "security_opt": {"default": None ,"type": list}, 
         "shm_size": {"default": None ,"type": str},
         "stdin_open": {"default": None ,"type": bool},      
-        "stdout": {"default": None ,"type": bool},      
-        "stderr": {"default": None ,"type": bool},      
+        "stdout": {"default": True ,"type": bool},      
+        "stderr": {"default": False ,"type": bool},      
         "stop_signal": {"default": None ,"type": str},      
-        "storage_opt": {"default": None ,"type": dict},      
+        "storage_opt": {"default": None ,"type": dict},   
+        "stream": {"default": False ,"type": bool},      
         "sysctls": {"default": None ,"type": dict},      
         "tmpfs": {"default": None ,"type": dict},                                                    
         "tty": {"default": None ,"type": bool},      
@@ -101,13 +102,17 @@ def api_containers_run():
     }
     
     parameters = get_HTTP_params(api_containers_run.get_params, request)
-    print(parameters)
     try:
         container = client.containers.run(**parameters)
-        container.logs()
     except:
         abort(400)
-    return ('', 204)
+        
+    #If detach is True, a Container object is returned.
+    print(parameters)
+    if parameters["detach"]:    
+        return container.attrs
+    else:
+        return ('', 204)
 
 
 
