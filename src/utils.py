@@ -3,7 +3,7 @@ from flask import json
 def get_HTTP_params(get_param_dict, request):
     if request.method == 'GET':
         return get_params_from_HTTP_GET(get_param_dict, request)
-    elif request.method in ['POST', 'PUT']:
+    elif request.method in ['POST', 'PUT', 'DELETE']:
         if request.is_json:
             return get_params_from_json(request)
         else:
