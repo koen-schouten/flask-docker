@@ -11,7 +11,7 @@ def hello_world():
 #-----------------------------------------------------------------------------#   
 #Containers
 #-----------------------------------------------------------------------------# 
-@app.route("/docker/api/containers/run", methods=['GET'])
+@app.route("/docker/api/containers/run", methods=['POST'])
 def api_containers_run():
     api_containers_run.get_params = {
         "image": {"default": None ,"type": str},
@@ -356,3 +356,4 @@ def api_image_labels(image_id):
 def api_image_short_id(image_id):
     image = get_docker_image_from_name(image_id) 
     return jsonify(image.short_id)
+
