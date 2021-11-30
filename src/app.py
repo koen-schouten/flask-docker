@@ -323,6 +323,7 @@ def api_images_list():
     image_list = client.images.list()
     return jsonify([image.attrs for image in image_list])
 
+
 @app.route("/docker/api/images/load", methods=['POST'])
 def api_images_load():
     if len(request.files) == 1:
@@ -333,8 +334,20 @@ def api_images_load():
         image = client.images.load(file)[0]
         return jsonify(image.attrs)
     abort(400)
-
     
+
+@app.route("/docker/api/images/prune", methods=['DELETE'])
+def api_images_prune():
+    api_images_prune.get_params = {"filters": {"default": None ,"type": dict}} 
+    parameters = get_HTTP_params(api_images_prune.get_params, request)
+    try:
+        #pruned_data is a dict containing ImagesDeleted and SpaceReclaimed.
+        pruned_data = client.images.prune(**parameters)
+        return jsonify(pruned_data)
+    except:
+        abort(400)
+ 
+   
 def get_docker_image_from_name(name):
     try:
         image = client.images.get(name)
