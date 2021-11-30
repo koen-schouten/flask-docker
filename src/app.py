@@ -348,6 +348,21 @@ def api_images_prune():
         abort(400)
  
    
+@app.route("/docker/api/images/search", methods=['GET'])
+def api_images_search():
+    api_images_search.get_params = {
+        "term": {"default": None ,"type": str},
+        "limit": {"default": None ,"type": int}
+    } 
+    parameters = get_HTTP_params(api_images_search.get_params, request)
+    print(parameters)
+    try:
+        image_list = client.images.search(**parameters)
+        return jsonify(image_list)
+    except:
+        abort(400)
+ 
+   
 def get_docker_image_from_name(name):
     try:
         image = client.images.get(name)
