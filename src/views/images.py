@@ -1,9 +1,8 @@
 from flask import jsonify, request, abort, Response
-from ..utils.utils import *
+from utils.utils import *
 import docker
 
 client = docker.from_env()
-
 
 """
 Helper function to get docker image from image_name

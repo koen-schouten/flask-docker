@@ -1,7 +1,6 @@
 from flask import Flask
-from .utils.utils import *
-from .views.containers import * 
-from .views.images import * 
+from views.containers import * 
+from views.images import * 
 
 client = docker.from_env()
 app = Flask(__name__)
