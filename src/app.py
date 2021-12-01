@@ -6,10 +6,6 @@ from .views.images import *
 client = docker.from_env()
 app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
 #Container urls
 app.add_url_rule('/docker/api/containers/run', view_func=api_containers_run, methods=['POST'])
 app.add_url_rule('/docker/api/containers/list', view_func=api_containers_list, methods=['GET'])
