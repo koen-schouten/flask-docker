@@ -1,5 +1,5 @@
 from flask import jsonify, request, abort, Response
-from utils.utils import *
+from views.utils.get_params import *
 import docker
 
 client = docker.from_env()
