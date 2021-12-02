@@ -14,6 +14,17 @@ def get_docker_container_from_id(container_id):
         abort(404)
     return container
 
+def calculate_container_cpu_percent(stats_dict):
+    cpu_count = len(stats_dict["cpu_stats"]["cpu_usage"]["percpu_usage"])
+    cpu_percent = 0.0
+    cpu_delta = float(stats_dict["cpu_stats"]["cpu_usage"]["total_usage"]) - \
+                float(stats_dict["precpu_stats"]["cpu_usage"]["total_usage"])
+    system_delta = float(stats_dict["cpu_stats"]["system_cpu_usage"]) - \
+                   float(stats_dict["precpu_stats"]["system_cpu_usage"])
+    if system_delta > 0.0:
+        cpu_percent = cpu_delta / system_delta * 100.0 * cpu_count
+    return cpu_percent
+
 #-----------------------------------------------------------------------------#   
 #Containers View functions
 #-----------------------------------------------------------------------------#  
@@ -244,6 +255,13 @@ def api_container_top(container_id):
 def api_container_stats(container_id):
     container = get_docker_container_from_id(container_id)
     return jsonify(container.stats(decode=False, stream=False))
+
+
+def api_container_cpu_usage(container_id):
+    container = get_docker_container_from_id(container_id)
+    stats_dict = container.stats(decode=False, stream=False)
+    cpu_percent = calculate_container_cpu_percent(stats_dict)
+    return jsonify(cpu_percent)
 
 
 def api_container_reload(container_id):
