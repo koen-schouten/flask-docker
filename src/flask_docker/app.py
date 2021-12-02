@@ -23,6 +23,7 @@ app.add_url_rule('/docker/api/container/<container_id>/start', view_func=api_con
 app.add_url_rule('/docker/api/container/<container_id>/stop', view_func=api_container_stop, methods=['PUT'])
 app.add_url_rule('/docker/api/container/<container_id>/top', view_func=api_container_top, methods=['GET'])
 app.add_url_rule('/docker/api/container/<container_id>/stats', view_func=api_container_stats, methods=['GET'])
+app.add_url_rule('/docker/api/container/<container_id>/cpu-usage', view_func=api_container_cpu_usage, methods=["GET"])
 app.add_url_rule('/docker/api/container/<container_id>/reload', view_func=api_container_reload, methods=['PUT'])
 app.add_url_rule('/docker/api/container/<container_id>/remove', view_func=api_container_remove, methods=['DELETE'])
 app.add_url_rule('/docker/api/container/<container_id>/kill', view_func=api_container_kill, methods=['PUT'])
