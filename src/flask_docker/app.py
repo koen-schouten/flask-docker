@@ -1,8 +1,8 @@
 from flask import Flask
+
 from views.containers import * 
 from views.images import * 
 
-client = docker.from_env()
 app = Flask(__name__)
 
 #Container urls
