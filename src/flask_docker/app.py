@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, url_for
 
 from views.containers import * 
 from views.images import * 
+from views.http_params import http_params_dict
 
 app = Flask(__name__)
 
@@ -44,3 +45,30 @@ app.add_url_rule('/api/image/<image_id>/history', view_func=api_image_history, m
 app.add_url_rule('/api/image/<image_id>/reload', view_func=api_image_reload, methods=['PUT'])
 app.add_url_rule('/api/image/<image_id>/save', view_func=api_container_image_save, methods=['GET'])
 app.add_url_rule('/api/image/<image_id>/tag', view_func=api_image_tag, methods=['PUT'])
+
+#site-map
+
+
+@app.route("/api")
+def site_map():
+    url_list = []
+    for rule in app.url_map.iter_rules():
+        options = {}
+        for arg in rule.arguments:
+            options[arg] = "[{0}]".format(arg)
+
+        rule_function = app.view_functions[rule.endpoint]
+        params = None
+        if rule_function.__name__ in http_params_dict:
+            params = http_params_dict[rule_function.__name__]
+
+        methods = ','.join(rule.methods)
+        url = url_for(rule.endpoint, **options)
+        url = {
+            "url" : url,
+            "params": params,
+            "methods" : methods
+        }
+        url_list.append(url)
+
+    return jsonify(url_list)
