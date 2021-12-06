@@ -1,5 +1,6 @@
 from flask import jsonify, request, abort, Response
 from views.utils.get_params import *
+from views.http_params import http_params_dict
 import docker
 
 client = docker.from_env()
@@ -35,8 +36,7 @@ def api_images_load():
     
 
 def api_images_prune():
-    api_images_prune.get_params = {"filters": {"default": None ,"type": dict}} 
-    parameters = get_HTTP_params(api_images_prune.get_params, request)
+    parameters = get_HTTP_params(http_params_dict["api_images_prune"], request)
     try:
         #pruned_data is a dict containing ImagesDeleted and SpaceReclaimed.
         pruned_data = client.images.prune(**parameters)
@@ -46,12 +46,7 @@ def api_images_prune():
         
 
 def api_images_search():
-    api_images_search.get_params = {
-        "term": {"default": None ,"type": str},
-        "limit": {"default": None ,"type": int}
-    } 
-    parameters = get_HTTP_params(api_images_search.get_params, request)
-    print(parameters)
+    parameters = get_HTTP_params(http_params_dict["api_images_search"], request)
     try:
         image_list = client.images.search(**parameters)
         return jsonify(image_list)
@@ -111,12 +106,7 @@ def api_container_image_save(image_id):
 
 def api_image_tag(image_id):
     image = get_docker_image_from_name(image_id) 
-    api_image_tag.get_params = {
-        "repository": {"default": None ,"type": str},
-        "tag": {"default": None ,"type": str},
-        } 
-    parameters = get_HTTP_params(api_image_tag.get_params, request)
-    print(parameters)
+    parameters = get_HTTP_params(http_params_dict("api_image_tag"), request)
     try:
         image.tag(**parameters)
         return ('', 204)
